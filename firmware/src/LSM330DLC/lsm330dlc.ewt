@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <configuration>
+    <name>Debug</name>
+    <toolchain>
+      <name>STM8</name>
+    </toolchain>
+    <debug>1</debug>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <toolchain>
+      <name>STM8</name>
+    </toolchain>
+    <debug>0</debug>
+  </configuration>
+  <group>
+    <name>scmRTOS</name>
+    <group>
+      <name>core</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\3rdparty\scmRTOS\core\os_kernel.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\3rdparty\scmRTOS\core\os_services.cpp</name>
+      </file>
+    </group>
+    <group>
+      <name>stm8</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\3rdparty\scmRTOS\port\stm8\iar\os_target.cpp</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\3rdparty\scmRTOS\port\stm8\iar\os_target_asm.s</name>
+      </file>
+    </group>
+  </group>
+  <file>
+    <name>$PROJ_DIR$\src\main.cpp</name>
+  </file>
+</project>
+
+

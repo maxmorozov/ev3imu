@@ -1,0 +1,1 @@
+A dedicated connection has been added for magnetometer data ready signals.

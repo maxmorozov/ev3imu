@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="commons-math-2.1">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Apps/commons-math-2.1" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="file://$USER_HOME$/Apps/commons-math-2.1/docs/apidocs" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$USER_HOME$/Apps/commons-math-2.1" />
+      <root url="file://$USER_HOME$/Apps/commons-math-2.1/docs/userguide" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Apps/commons-math-2.1" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Apps/commons-math-2.1" recursive="false" type="SOURCES" />
+  </library>
+</component>

@@ -1,0 +1,5 @@
+speed=199.951171875 dps
+
+It seems only offset is changed when I change modes. So I can calculate transformation matrix for 
+mode 125 dps from the matrix for mode 250 dps. Offset values should be multiplied by 2.
+

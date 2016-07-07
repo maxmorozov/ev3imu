@@ -1,0 +1,1 @@
+Calibration gyro offers using steady sensor.

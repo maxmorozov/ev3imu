@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="CalibrationGyro:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CalibrationGyro_jar</output-path>
+    <root id="archive" name="CalibrationGyro.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/resources/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="CalibrationGyro" />
+      <element id="module-output" name="math" />
+      <element id="module-output" name="ev3imu" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,1 @@
+Write initial EEPROM data that allows to read data samples.

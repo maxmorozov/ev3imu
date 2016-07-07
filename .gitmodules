@@ -1,0 +1,3 @@
+[submodule "firmware/3rdparty/scmRTOS"]
+	path = firmware/3rdparty/scmRTOS
+	url = https://github.com/scmrtos/scmrtos.git
