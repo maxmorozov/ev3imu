@@ -119,20 +119,25 @@ typedef lsm6ds3::Accelerometer<ImuTransport> Accelerometer;
 //      EEPROM data layout
 //
 
-//Each sensor support a number of modes with different full-range scales
+//Each sensor supports a number of modes with different full-range scales
 //Each mode should be calibrated individually and we keep a transformation matrix
 //for each mode
 typedef math::DenseMatrix<int16_t, 4, 3, utils::WordCopy> TranformationMatrix;
 
-namespace stm8 {
-    template <typename T>
-    struct EepromData {
-        TranformationMatrix matrices[sensors::traits::scale_count<T>::value];
-    };
-}
+template <typename T>
+class EepromData {
+private:
+    TranformationMatrix matrices[sensors::traits::scale_count<T>::value];
+public:
+    static_assert(sizeof(matrices) <= 256, "Cannot use 8-bit index in pointer arithmetic");
+    
+    INLINE int16_t* get(uint8_t scale) {
+        return (int16_t*)((uint8_t*)(matrices[0]) + uint8_t(scale * sizeof(matrices[0])));
+    }
+};
 
 typedef mpl::make_type_list<Gyroscope, Accelerometer>::type devices;
-typedef stm8::Eeprom<mpl::map<devices, stm8::make_eeprom>::type> eeprom_type;
+typedef stm8::Eeprom<EepromData, devices> eeprom_type;
 
 #pragma location=FLASH_DATA_START_PHYSICAL_ADDRESS
 __no_init eeprom_type eeprom;

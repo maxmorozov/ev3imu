@@ -75,7 +75,7 @@ namespace sensors {
             //The scale is always < 8 because we get it from eepromInfo message, where
             //scale info occupies only 3 bits
             static uint8_t* getDeviceMatrix(Scale scale) {
-                return pbyte(eeprom.template get<Device>().matrices[0]) + uint8_t(scale * sizeof(eeprom.template get<Device>().matrices[0]));
+                return pbyte(eeprom.template get<Device>().get(scale));
             }
 
         public:

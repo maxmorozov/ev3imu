@@ -49,7 +49,7 @@ namespace math {
     template <typename Eeprom, Eeprom& eeprom, typename Tag>
     struct Transformation : VectorCorrection {
         INLINE void transform(uint8_t scale, const int16_t* data, int16_t* result) const {
-            VectorCorrection::transform(eeprom.template get<Tag>().matrices[0], scale, data, result);
+            VectorCorrection::transform(eeprom.template get<Tag>().get(0), scale, data, result);
         }
     };
     

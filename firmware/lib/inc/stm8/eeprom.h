@@ -13,33 +13,31 @@ namespace stm8 {
         struct root {
         };
 
-        //Metafunction to generate linear hierarchy
-        template <typename State, typename Item>
-        struct HierarchyGenerator {
-            struct type: Item, State {
+        //Helper metafunction to make EEPROM data from device type
+        template <template <typename> class EepromData>
+        struct EepromGenerator {
+            //Metafunction to generate linear hierarchy
+            template <typename State, typename Item>
+            struct HierarchyGenerator {
+                struct type: EepromData<Item>, State {
+                };
+            };
+
+            template <typename Item>
+            struct HierarchyGenerator<root, Item> {
+                typedef EepromData<Item> type;
             };
         };
-
-        template <typename Item>
-        struct HierarchyGenerator<root, Item> {
-            typedef Item type;
-        };
+        
     }
 
-    //EEPROM data associated with some device
-    //The application should specialize this template for each
-    //device type that should keep its data in EEPROM.
-    template <typename Tag> struct EepromData;
-
-    //Helper metafunction to make EEPROM data from device type
-    template <typename T>
-    struct make_eeprom {
-        typedef EepromData<T> type;
-    };
-
     //Combines data structures associated with some device typem(Tag type)
-    template <typename TypeList>
-    class Eeprom : mpl::fold<TypeList, details::root, details::HierarchyGenerator>::type {
+    //EepromData defines a EEPROM container for each device type. 
+    //   EepromData must contain member function  "int16* get(int scale)" that 
+    //   returns pointer to appropriate device transformation matrix.
+    //Device type list contains list of device types (tags)
+    template <template <typename> class EepromData, typename DeviceTypeList>
+    class Eeprom : mpl::fold<DeviceTypeList, details::root, details::EepromGenerator<EepromData>::template HierarchyGenerator>::type {
     public:
         //Returns a constant reference to the device data structure by device tag
         template <typename Tag>
