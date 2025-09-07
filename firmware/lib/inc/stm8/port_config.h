@@ -86,12 +86,12 @@ namespace stm8 {
         typedef typename mpl::map<grouped_pins, details::port_configurer_gen>::type port_configurers;
 
         //Recursion terminator
-        INLINE static void configure(mpl::null_type) {
+        INLINE static void configure(const mpl::null_type&) {
         }
 
         #pragma inline=forced
         template <typename Head, typename Tail>
-        static void configure(mpl::type_list<Head, Tail>) {
+        static void configure(const mpl::type_list<Head, Tail>&) {
             //Configure port
             Head::configure();
             //Call next port configurers

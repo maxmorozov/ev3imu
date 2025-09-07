@@ -1,14 +1,15 @@
 package calibration.datasource;
 
 import calibration.ui.Display;
-import org.apache.commons.math.linear.Array2DRowRealMatrix;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Data provider that reads the measurement results from a file.
@@ -55,13 +56,15 @@ public class FileDataSource implements DataSource {
     private static RealMatrix readMatrix(int rows, int columns, String fileName) throws IOException {
         RealMatrix w = new Array2DRowRealMatrix(rows, columns);
         final int[] rowCounter = {0};
-        Files.lines(FileSystems.getDefault().getPath(fileName)).forEach((String line) -> {
-            String[] parts = line.split("\\,");
-            for (int i = 0; i < columns; ++i) {
-                w.setEntry(rowCounter[0], i, Double.valueOf(parts[i]));
-            }
-            ++rowCounter[0];
-        });
+        try (Stream<String> lines = Files.lines(FileSystems.getDefault().getPath(fileName))) {
+            lines.forEach((String line) -> {
+                String[] parts = line.split(",");
+                for (int i = 0; i < columns; ++i) {
+                    w.setEntry(rowCounter[0], i, Double.parseDouble(parts[i]));
+                }
+                ++rowCounter[0];
+            });
+        }
         return w;
     }
 

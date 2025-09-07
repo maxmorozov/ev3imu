@@ -20,7 +20,7 @@ namespace sensors {
         // Initialize the device.
         // Input:
         //	- scale = The scale of the device. Should be a Scale value.
-        //	- odr = Output data rate of the device. ORD value.
+        //	- odr = Output data rate of the device. ODR value.
         //  - dataReadyInterrupt = generate an interrupt when sensor's data is available
         INLINE void init(Scale scale, ODR odr, DataReadyInterrupt dataReadyInterrupt) {
             device.init(currentScale = scale, odr, dataReadyInterrupt);

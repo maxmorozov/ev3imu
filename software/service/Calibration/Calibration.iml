@@ -10,8 +10,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="math" />
     <orderEntry type="module" module-name="ev3imu" />
-    <orderEntry type="library" name="commons-math-2.1" level="project" />
     <orderEntry type="library" name="LeJOS EV3" level="application" />
     <orderEntry type="module" module-name="CalibrationCore" />
+    <orderEntry type="library" name="commons-math3" level="application" />
   </component>
 </module>

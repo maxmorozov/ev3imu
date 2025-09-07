@@ -3,9 +3,14 @@ package calibration;
 import calibration.datasource.DataSource;
 import calibration.datasource.ReferenceDataSource;
 import calibration.ui.Display;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.*;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -70,8 +75,11 @@ public class CalibrationSixPoints {
             RealMatrix w_scale = w.get(scale);
             RealMatrix Y_scale = Y.get(scale);
 
-            RealMatrix w_T = w_scale.transpose();
-            RealMatrix X = w_T.multiply(w_scale).inverse().multiply(w_T).multiply(Y_scale);
+            DecompositionSolver solver = new QRDecomposition(w_scale).getSolver();
+            RealMatrix X = solver.solve(Y_scale).transpose();
+
+            //RealMatrix w_T = w_scale.transpose();
+            //RealMatrix X = inverse(w_T.multiply(w_scale)).multiply(w_T).multiply(Y_scale).transpose();
 
             //Write to the file
             saveMatrix(X, String.format("X[%d].txt", scale));
@@ -82,17 +90,23 @@ public class CalibrationSixPoints {
         }
     }
 
+/*
+    private static RealMatrix inverse(RealMatrix value) {
+        return new LUDecomposition(value)
+                .getSolver()
+                .getInverse();
+    }
+*/
+
     //Calculates 16-bit integer constants to write to sensor's EEPROM
     private static short[] calcIntegers(RealMatrix matrix) {
         short[] result = new short[matrix.getRowDimension() * matrix.getColumnDimension()];
         int index = 0;
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 3; ++col) {
+        for (int row = 0; row < matrix.getRowDimension(); ++row) {
+            for (int col = 0; col < matrix.getColumnDimension() - 1; ++col) {
                 result[index++] = (short) Math.round(matrix.getEntry(row, col) * 0x4000);
             }
-        }
-        for (int col = 0; col < 3; ++col) {
-            result[index++] = (short) Math.round(matrix.getEntry(3, col) / 2);
+            result[index++] = (short) Math.round(matrix.getEntry(row, matrix.getColumnDimension() - 1) / 2);
         }
         return result;
     }
@@ -105,7 +119,7 @@ public class CalibrationSixPoints {
      * @throws IOException
      */
     private static void saveMatrix(RealMatrix matrix, String fileName) throws IOException {
-        try (OutputStream os = new FileOutputStream(fileName);
+        try (OutputStream os = Files.newOutputStream(Paths.get(fileName));
              BufferedOutputStream bos = new BufferedOutputStream(os, 64000);
              PrintStream ps = new PrintStream(bos)) {
 

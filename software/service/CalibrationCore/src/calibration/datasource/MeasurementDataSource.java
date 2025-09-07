@@ -1,14 +1,13 @@
 package calibration.datasource;
 
+import calibration.SampleProviderWithScale;
 import calibration.system.Delay;
 import calibration.ui.Buttons;
 import calibration.ui.Display;
-import calibration.SampleProviderWithScale;
 import calibration.ui.Sound;
-import org.apache.commons.math.linear.Array2DRowRealMatrix;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +24,10 @@ public class MeasurementDataSource implements DataSource {
     private final int scaleCount;
     private final SampleProviderWithScale sampleProvider;
 
-    private static short[] initialEeprom = {
-            0x4000,       0,       0,
-            0,       0x4000,       0,
-            0,            0,  0x4000,
-            0,            0,       0
+    private static final short[] initialEeprom = {
+            0x4000, 0, 0, 0,
+            0, 0x4000, 0, 0,
+            0, 0, 0x4000, 0
     };
 
     public MeasurementDataSource(Display display, Buttons buttons, Sound sound, Delay delay, int scaleCount, SampleProviderWithScale sampleProvider) {
@@ -53,7 +51,7 @@ public class MeasurementDataSource implements DataSource {
      * @return list of measurement results for each full-range scale
      */
     @Override
-    public List<RealMatrix> get(int sampleCount, String[] positions) throws IOException {
+    public List<RealMatrix> get(int sampleCount, String[] positions) {
         display.clear();
         display.drawString("Initializing", 1, 1);
         display.drawString("Scale=", 1, 2);
@@ -61,7 +59,7 @@ public class MeasurementDataSource implements DataSource {
         List<RealMatrix> w = new ArrayList<>();
 
         //Fill the EEPROM with initial values to measure raw data
-        for (int scale = 0; scale < sampleCount; ++scale) {
+        for (int scale = 0; scale < scaleCount; ++scale) {
             display.drawInt(scale, 2, 7, 2);
 
             w.add(new Array2DRowRealMatrix(positions.length * sampleCount, 4));
@@ -90,7 +88,7 @@ public class MeasurementDataSource implements DataSource {
 
         float[] sample = new float[sampleProvider.sampleSize()];
 
-        for (int scale = 0; scale <scaleCount; ++scale) {
+        for (int scale = 0; scale < scaleCount; ++scale) {
             display.drawInt(scale, 2, 7, 2);
 
             sampleProvider.setScale(scale);

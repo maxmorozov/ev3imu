@@ -22,17 +22,17 @@ import lejos.utility.TextMenu;
 import java.io.IOException;
 
 public class Calibration {
-    private static Display display = new EV3Display();
-    private static Sound sound = new EV3Sound();
-    private static Buttons buttons = new EV3Buttons();
-    private static Delay delay = new SystemDelay();
+    private static final Display display = new EV3Display();
+    private static final Sound sound = new EV3Sound();
+    private static final Buttons buttons = new EV3Buttons();
+    private static final Delay delay = new SystemDelay();
 
-    private static SensorInfo[] sensorsLsm6ds3 = {
+    private static final SensorInfo[] sensorsLsm6ds3 = {
             new sensors.lsm6ds3.AccelerometerInfo(),
             new sensors.lsm6ds3.GyroscopeInfo()
     };
 
-    private static SensorInfo[] sensorsLsm9ds0 = {
+    private static final SensorInfo[] sensorsLsm9ds0 = {
             new sensors.lsm9ds0.AccelerometerInfo(),
             new sensors.lsm9ds0.GyroscopeInfo()
     };
@@ -95,7 +95,7 @@ public class Calibration {
      * @return navigator instance bn
      */
     private static SensorInfo getDevice(SensorInfo[] sensors) {
-        String[] navigatorItems = {"Acceleromter", "Gyroscope", "Exit"};
+        String[] navigatorItems = {"Accelerometer", "Gyroscope", "Exit"};
         TextMenu main = new TextMenu(navigatorItems, 1, "Device");
         LCD.clear();
         int selection = main.select();

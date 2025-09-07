@@ -8,10 +8,9 @@ import java.io.IOException;
 
 public class InitEeprom {
     private static short[] initialEeprom = {
-            0x4000, 0, 0,
-            0, 0x4000, 0,
-            0, 0, 0x4000,
-            0, 0, 0
+            0x4000, 0, 0, 0,
+            0, 0x4000, 0, 0,
+            0, 0, 0x4000, 0
     };
 
     public static void main(String[] args) throws IOException {

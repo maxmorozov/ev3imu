@@ -11,7 +11,7 @@ public class ImuDataProvider<T extends ScaleSelector & ImuEepromWriter> implemen
     private final SampleProvider sampleProvider;
     private final T sensor;
     private final SensorInfo deviceInfo;
-    private float[] sample;
+    private final float[] sample;
 
     public ImuDataProvider(SensorInfo deviceInfo, SampleProvider sampleProvider, T sensor) {
         this.deviceInfo = deviceInfo;

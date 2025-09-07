@@ -1,9 +1,11 @@
 package calibration.datasource;
 
 import calibration.ui.Display;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -55,7 +57,7 @@ public class SavingDataDecorator implements DataSource {
      * @throws IOException
      */
     private static void saveMatrix(RealMatrix matrix, String fileName) throws IOException {
-        try (OutputStream os = new FileOutputStream(fileName);
+        try (OutputStream os = Files.newOutputStream(Paths.get(fileName));
              BufferedOutputStream bos = new BufferedOutputStream(os, 64000);
              PrintStream ps = new PrintStream(bos)) {
 

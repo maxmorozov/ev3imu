@@ -11,8 +11,8 @@ namespace math {
     //a transformation matrix
 	class VectorCorrection {
     private:
-        static const uint8_t ROWS = 4;
-        static const uint8_t COLUMNS = 3;
+        static const uint8_t ROWS = 3;
+        static const uint8_t COLUMNS = 4;
 
         //Returns the matrix for the specified scale
         // matrix - Arrays of matrices for each scale. Each matrix is 4x3 matrix
@@ -30,13 +30,25 @@ namespace math {
             return matrix[uint8_t(row * COLUMNS) + col];
         }
 
-        //Calculates the matrix expression (data * matrix) * 2
-        //The multiplication to 2 controlls the overflow conditons and saturates the result in this case
+        //Calculates the matrix expression (matrix * data) * 2
+        //The multiplication to 2 controls the overflow conditons and saturates the result in this case
         //The method produces 16-bit integers in little-endian format
         INLINE static void vector_mul(const int16_t* matrix, const int16_t* data, int16_t* result) {
-            result[0] = scale2le(mul(data[0], get(matrix, 0, 0)) + mul(data[1], get(matrix, 1, 0)) + mul(data[2], get(matrix, 2, 0)) + get(matrix, 3, 0));
-            result[1] = scale2le(mul(data[0], get(matrix, 0, 1)) + mul(data[1], get(matrix, 1, 1)) + mul(data[2], get(matrix, 2, 1)) + get(matrix, 3, 1));
-            result[2] = scale2le(mul(data[0], get(matrix, 0, 2)) + mul(data[1], get(matrix, 1, 2)) + mul(data[2], get(matrix, 2, 2)) + get(matrix, 3, 2));
+            result[0] = scale2le(
+					mul(get(matrix, 0, 0), data[0]) + 
+					mul(get(matrix, 0, 1), data[1]) + 
+					mul(get(matrix, 0, 2), data[2]) + 
+					get(matrix, 0, 3));
+            result[1] = scale2le(
+					mul(get(matrix, 1, 0), data[0]) + 
+					mul(get(matrix, 1, 1), data[1]) + 
+					mul(get(matrix, 1, 2), data[2]) + 
+					get(matrix, 1, 3));
+            result[2] = scale2le(
+					mul(get(matrix, 2, 0), data[0]) + 
+					mul(get(matrix, 2, 1), data[1]) + 
+					mul(get(matrix, 2, 2), data[2]) + 
+					get(matrix, 2, 3));
         }
 
     public:

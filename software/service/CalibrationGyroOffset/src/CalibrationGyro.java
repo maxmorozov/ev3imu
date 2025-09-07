@@ -13,8 +13,10 @@ import lejos.utility.TextMenu;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Calibrates gyroscope in steady state to correct offset error
@@ -28,27 +30,23 @@ public class CalibrationGyro {
         None
     }
 
-    private static short[] initialEeprom = {
-            0x4000, 0, 0,
-            0, 0x4000, 0,
-            0, 0, 0x4000,
-            0, 0, 0
+    private static final short[] initialEeprom = {
+            0x4000, 0, 0, 0,
+            0, 0x4000, 0, 0,
+            0, 0, 0x4000, 0
     };
 
     //EEPROM for mode 125dps is recalculated from correction matrix for mode 250dps
-    private static short[] eeprom = {
-            16234,	204,	429,
-            -154,	16534,	62,
-            143,	-139,	16333,
-            -60,	747,	358
-
+    private static final short[] eeprom = {
+            16234,	-154,    143,   -60,
+            204,     16534, -139,    747,
+            429,     62,     16333,  358
     };
 
-    private static short[] zeros = {
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0,
-            0, 0, 0
+    private static final short[] zeros = {
+            0, 0, 0, 0,
+            0, 0, 0, 0,
+            0, 0, 0, 0
     };
 
     public static void main(String[] args) throws IOException {
@@ -103,8 +101,8 @@ public class CalibrationGyro {
             short[] eeprom = new short[initialEeprom.length];
             System.arraycopy(initialEeprom, 0, eeprom, 0, 9);
 
-            eeprom[9] = (short) Math.round(-offset.x / 2);
-            eeprom[10] = (short) Math.round(-offset.y / 2);
+            eeprom[3] = (short) Math.round(-offset.x / 2);
+            eeprom[7] = (short) Math.round(-offset.y / 2);
             eeprom[11] = (short) Math.round(-offset.z / 2);
 
             sensor.writeGyroscopeEeprom(scale, eeprom);
@@ -189,7 +187,7 @@ public class CalibrationGyro {
      * @throws IOException
      */
     private static void saveMatrix(FloatValue offset, String fileName) throws IOException {
-        try (OutputStream os = new FileOutputStream(fileName);
+        try (OutputStream os = Files.newOutputStream(Paths.get(fileName));
              BufferedOutputStream bos = new BufferedOutputStream(os, 64000);
              PrintStream ps = new PrintStream(bos)) {
 
@@ -215,7 +213,7 @@ public class CalibrationGyro {
      * @throws IOException
      */
     private static void saveMatrix(int[][] matrix, String fileName) throws IOException {
-        try (OutputStream os = new FileOutputStream(fileName);
+        try (OutputStream os = Files.newOutputStream(Paths.get(fileName));
              BufferedOutputStream bos = new BufferedOutputStream(os, 64000);
              PrintStream ps = new PrintStream(bos)) {
 
@@ -243,15 +241,17 @@ public class CalibrationGyro {
     private static int[][] readMatrix(int rows, int columns, String fileName) throws IOException {
         int[][] w = new int[rows][];
         final int[] rowCounter = {0};
-        Files.lines(FileSystems.getDefault().getPath(fileName)).forEach((String line) -> {
-            String[] parts = line.split("\\,");
-            int[] row = new int[columns];
-            w[rowCounter[0]] = row;
-            for (int i = 0; i < columns; ++i) {
-                row[i] = Short.valueOf(parts[i]);
-            }
-            ++rowCounter[0];
-        });
+        try (Stream<String> lines = Files.lines(FileSystems.getDefault().getPath(fileName))) {
+            lines.forEach((String line) -> {
+                String[] parts = line.split(",");
+                int[] row = new int[columns];
+                w[rowCounter[0]] = row;
+                for (int i = 0; i < columns; ++i) {
+                    row[i] = Short.parseShort(parts[i]);
+                }
+                ++rowCounter[0];
+            });
+        }
         return w;
     }
 

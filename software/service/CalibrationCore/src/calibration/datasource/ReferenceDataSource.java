@@ -1,9 +1,8 @@
 package calibration.datasource;
 
-import org.apache.commons.math.linear.Array2DRowRealMatrix;
-import org.apache.commons.math.linear.RealMatrix;
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.linear.RealMatrix;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -35,7 +34,7 @@ public class ReferenceDataSource implements DataSource {
     }
 
     @Override
-    public List<RealMatrix> get(int sampleCount, String[] positions) throws IOException {
+    public List<RealMatrix> get(int sampleCount, String[] positions) {
         List<RealMatrix> Y = new ArrayList<>();
 
         //Fill the EEPROM with initial values to measure raw data

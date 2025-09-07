@@ -162,7 +162,7 @@ namespace lsm330 {
 
         //Sets the appropriate byte ordeder in output samples
         void setBigEndian() {
-            //Usage of setBist looks more reasonable, but produces bigger code,
+            //Usage of setBits looks more reasonable, but produces bigger code,
             //because other methods that use setBits are not used in my project
             transport.writeByteWithMask(Registers::CTRL_REG4, Bitmasks::Endiannes, Bitmasks::Endiannes);
         }
